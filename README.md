@@ -1,8 +1,6 @@
 # DehashChat
 Python CLI using ChatGPT and Dehashed API for natural language queries
 
-Below are step-by-step instructions you can include in a GitHub README file, detailing how to run the provided Python CLI app inside a Docker container. This guide assumes the reader has a basic understanding of Docker and Python environments.
-
 # Running the Python CLI App in Docker
 
 This guide outlines how to run the Python CLI application, which interacts with ChatGPT and Dehashed APIs, inside a Docker container.
