@@ -60,21 +60,31 @@ docker run -it <your-image-name>
 
 The `-it` flags attach your terminal to the container, allowing you to interact with the CLI app directly.
 
-## Optional: Using Environment Variables for API Keys
+## Providing API Keys via Environment Variables
 
-To avoid hardcoding your API keys in the application, you can pass them as environment variables. Modify the Dockerfile's CMD to:
-
-```Dockerfile
-CMD ["sh", "-c", "OPENAI_API_KEY=${OPENAI_API_KEY} DEHASHED_API_KEY=${DEHASHED_API_KEY} python ./Chat.py"]
-```
-
-Then, run your Docker container with the `-e` option to set environment variables:
+To avoid hardcoding your API keys in the application, provide them when you start the container. Pass them directly with `docker run -e`:
 
 ```sh
-docker run -it -e OPENAI_API_KEY='your_openai_api_key_here' -e DEHASHED_API_KEY='your_dehashed_api_key_here' <your-image-name>
+docker run -it \
+  -e OPENAI_API_KEY="your_openai_api_key_here" \
+  -e DEHASHED_API_KEY="your_dehashed_api_key_here" \
+  <your-image-name>
 ```
 
-Replace `'your_openai_api_key_here'` and `'your_dehashed_api_key_here'` with your actual API keys.
+You can also place the variables in a `.env` file:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+DEHASHED_API_KEY=your_dehashed_api_key_here
+```
+
+and load them with the `--env-file` option:
+
+```sh
+docker run -it --env-file .env <your-image-name>
+```
+
+Replace `your_openai_api_key_here` and `your_dehashed_api_key_here` with your actual API keys.
 
 ## Note on Persistent Storage
 
