@@ -12,7 +12,7 @@ This guide outlines how to run the Python CLI application, which interacts with 
 
 ## Step 1: Prepare Your Application
 
-Ensure your Python application (`app.py`) and the `requirements.txt` file listing all necessary Python packages are in the same directory. Your `requirements.txt` should include:
+Ensure your Python application (`Chat.py`) and the `requirements.txt` file listing all necessary Python packages are in the same directory. Your `requirements.txt` should include:
 
 ```
 openai
@@ -36,8 +36,8 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run app.py when the container launches
-CMD ["python", "./app.py"]
+# Run Chat.py when the container launches
+CMD ["python", "./Chat.py"]
 ```
 
 ## Step 3: Build the Docker Image
@@ -65,7 +65,7 @@ The `-it` flags attach your terminal to the container, allowing you to interact 
 To avoid hardcoding your API keys in the application, you can pass them as environment variables. Modify the Dockerfile's CMD to:
 
 ```Dockerfile
-CMD ["sh", "-c", "OPENAI_API_KEY=${OPENAI_API_KEY} DEHASHED_API_KEY=${DEHASHED_API_KEY} python ./app.py"]
+CMD ["sh", "-c", "OPENAI_API_KEY=${OPENAI_API_KEY} DEHASHED_API_KEY=${DEHASHED_API_KEY} python ./Chat.py"]
 ```
 
 Then, run your Docker container with the `-e` option to set environment variables:
