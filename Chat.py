@@ -62,9 +62,9 @@ def main():
         chat_response = chatgpt_query(session_id, question)
         if chat_response:
             print(f"ChatGPT: {chat_response}")
-            # Example: Convert chat_response to query parameters for Dehashed
-            # This needs to be implemented based on the response and what information you're looking for
-            dehashed_response = query_dehashed({'query': chat_response})  # Placeholder for actual implementation
+            # TODO: parse chat_response into specific DeHashed search parameters
+            search_params = {'query': chat_response}
+            dehashed_response = query_dehashed(search_params)
             print(f"Dehashed Data: {dehashed_response}")
             
             # Save the session after each interaction
