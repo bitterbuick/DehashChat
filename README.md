@@ -1,14 +1,14 @@
 # DehashChat
-Python CLI using ChatGPT and Dehashed API for natural language queries
+Python CLI using ChatGPT and DeHashed API for natural language queries
 
 # Running the Python CLI App in Docker
 
-This guide outlines how to run the Python CLI application, which interacts with ChatGPT and Dehashed APIs, inside a Docker container.
+This guide outlines how to run the Python CLI application, which interacts with ChatGPT and DeHashed APIs, inside a Docker container.
 
 ## Prerequisites
 
 - Docker installed on your system. If you haven't installed Docker yet, follow the [official Docker installation guide](https://docs.docker.com/get-docker/).
-- An API key for OpenAI (ChatGPT) and an API key for Dehashed. You'll need these to interact with the respective services.
+- An API key for OpenAI (ChatGPT) and an API key for DeHashed. You'll need these to interact with the respective services.
 
 ## Step 1: Prepare Your Application
 

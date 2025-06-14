@@ -57,7 +57,7 @@ def query_dehashed(parameters):
         response = requests.get('https://api.dehashed.com/search', headers=headers, params=parameters)
         return response.json()
     except Exception as e:
-        print(f"Error querying Dehashed: {e}")
+        print(f"Error querying DeHashed: {e}")
         return None
 
 def main():
@@ -73,7 +73,7 @@ def main():
             # TODO: parse chat_response into specific DeHashed search parameters
             search_params = {'query': chat_response}
             dehashed_response = query_dehashed(search_params)
-            print(f"Dehashed Data: {dehashed_response}")
+            print(f"DeHashed Data: {dehashed_response}")
             
             # Save the session after each interaction
             if session_id not in chat_sessions:
