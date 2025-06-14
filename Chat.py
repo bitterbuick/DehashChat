@@ -2,11 +2,19 @@ import openai
 import requests
 import json
 import os
+import sys
 
 # Configuration
-OPENAI_API_KEY = 'your_openai_api_key_here'
-DEHASHED_API_KEY = 'your_dehashed_api_key_here'
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEHASHED_API_KEY = os.getenv("DEHASHED_API_KEY")
 SESSION_FILE = 'chat_sessions.json'
+
+if not OPENAI_API_KEY:
+    print("Missing OPENAI_API_KEY environment variable.")
+    sys.exit(1)
+if not DEHASHED_API_KEY:
+    print("Missing DEHASHED_API_KEY environment variable.")
+    sys.exit(1)
 
 openai.api_key = OPENAI_API_KEY
 
