@@ -20,8 +20,12 @@ openai.api_key = OPENAI_API_KEY
 
 # Initialize or load chat sessions
 if os.path.exists(SESSION_FILE):
-    with open(SESSION_FILE, 'r') as file:
-        chat_sessions = json.load(file)
+    try:
+        with open(SESSION_FILE, 'r') as file:
+            chat_sessions = json.load(file)
+    except json.JSONDecodeError:
+        print("Warning: session file is malformed. Starting with empty sessions.")
+        chat_sessions = {}
 else:
     chat_sessions = {}
 
