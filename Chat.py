@@ -4,8 +4,14 @@ import json
 import os
 
 # Configuration
-OPENAI_API_KEY = 'your_openai_api_key_here'
-DEHASHED_API_KEY = 'your_dehashed_api_key_here'
+# API keys can be supplied via environment variables to avoid hardcoding
+# sensitive information in the source code. The README describes this,
+# but the original implementation ignored environment variables entirely.
+#
+# Attempt to read the keys from the environment and fall back to the
+# placeholders if they are not provided.
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_openai_api_key_here')
+DEHASHED_API_KEY = os.getenv('DEHASHED_API_KEY', 'your_dehashed_api_key_here')
 SESSION_FILE = 'chat_sessions.json'
 
 openai.api_key = OPENAI_API_KEY
