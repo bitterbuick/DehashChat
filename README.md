@@ -44,7 +44,34 @@ This will build the image (if needed), start the container, and drop you into th
 
 ---
 
-## Manual Docker Run (Alternative)
+## Troubleshooting DeHashed API
+
+If you encounter `401 Unauthorized` or `404 Not Found` errors:
+
+### Verify API Credentials
+
+1.  **Check your DeHashed account**: Log in to [DeHashed](https://www.dehashed.com/) and verify:
+    -   You have an active subscription with API access
+    -   Your API key is correctly copied from your account dashboard
+    -   Your `EMAIL_ADDRESS` matches your DeHashed login email exactly
+
+2.  **Test API manually** with `curl`:
+    ```bash
+    curl -u "your_email@example.com:your_api_key" \
+         "https://api.dehashed.com/search?query=email:test@example.com"
+    ```
+
+3.  **Common Issues**:
+    -   **Wrong endpoint**: DeHashed has changed endpoints. Try `/search` vs `/v2/search`
+    - **Whitespace**: Ensure no extra spaces/newlines in your `.env` file values
+    -   **Account tier**: Free accounts may not have API access 
+    -   **Quota exceeded**: Check if you've hit your API rate limit
+
+If the `curl` command also fails with 401/404, there's an issue with your DeHashed credentials or account, not this application.
+
+---
+
+## Local Development (No Docker)
 
 If you prefer running Docker manually:
 

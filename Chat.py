@@ -1,4 +1,5 @@
 import openai
+import base64
 import requests
 import json
 import os
@@ -9,9 +10,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-DEHASHED_API_KEY = os.getenv("DEHASHED_API_KEY")
-DEHASHED_EMAIL = os.getenv("EMAIL_ADDRESS") # Using EMAIL_ADDRESS to match .env.example
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+DEHASHED_API_KEY = os.getenv("DEHASHED_API_KEY", "").strip()
+DEHASHED_EMAIL = os.getenv("EMAIL_ADDRESS", "").strip() # Using EMAIL_ADDRESS to match .env.example
 SESSION_FILE = 'chat_sessions.json'
 
 # Validation
@@ -50,26 +51,39 @@ def query_dehashed(query):
     """
     Execute a search against the DeHashed API.
     """
-    url = "https://api.dehashed.com/search"
+    url = "https://api.dehashed.com/v2/search" 
+    
+    # Credentials
+    credentials = f"{DEHASHED_EMAIL}:{DEHASHED_API_KEY}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+    
     headers = {
         'Accept': 'application/json',
-    }
-    # DeHashed uses Basic Auth: (email, api_key)
-    # The 'query' parameter is passed in the URL parameters
-    params = {
-        'query': query,
-        'size': 100 # Default limit
+        'Authorization': f'Basic {encoded_credentials}',
+        'User-Agent': 'DehashChat/1.0' 
     }
     
+    params = {'query': query}
+
     print(f"\n[DEBUG] Querying DeHashed with: {query} ...")
+    print(f"[DEBUG] URL: {url}")
+    print(f"[DEBUG] Headers: Accept={headers['Accept']}, User-Agent={headers['User-Agent']}")
+    print(f"[DEBUG] Auth Header Present: {('Authorization' in headers)}")
+    print(f"[DEBUG] Auth Header Starts With: Basic {encoded_credentials[:10]}...")
     
     try:
         response = requests.get(
             url, 
             headers=headers, 
-            params=params, 
-            auth=(DEHASHED_EMAIL, DEHASHED_API_KEY)
+            params=params
         )
+
+        print(f"[DEBUG] Response Status Code: {response.status_code}")
+        print(f"[DEBUG] Response Headers: {dict(response.headers)}")
+        
+        if response.history:
+             print(f"[DEBUG] Request was redirected. History: {[r.status_code for r in response.history]}")
+             print(f"[DEBUG] Final URL after redirects: {response.url}")
         
         if response.status_code == 200:
             data = response.json()
@@ -98,9 +112,17 @@ def query_dehashed(query):
 
 def run_conversation(session_id):
     # Retrieve history or start new
-    messages = chat_sessions.get(session_id, [
-        {"role": "system", "content": "You are a helpful security assistant. You have access to the DeHashed API to check for compromised data. When a user asks to check if something was leaked (email, IP, username, etc.), use the 'search_dehashed' function. Construct a precise DeHashed query (e.g., 'email:test@example.com' or 'ip:1.2.3.4'). Always interpret the JSON results from DeHashed and provide a natural language summary to the user. Do not simply dump the JSON. If the result contains passwords, warn the user strictly."}
-    ])
+    messages = chat_sessions.get(session_id, [])
+    
+    # Validate message format compatibility
+    if messages and ('role' not in messages[0]):
+        print("[INFO] Old session format detected. Starting new session.")
+        messages = []
+
+    if not messages:
+        messages = [
+            {"role": "system", "content": "You are a DeHashed security analyst. Your goal is to interpret raw JSON breach data and explain it clearly to the user. \n\nWHEN YOU RECEIVE DATA FROM 'search_dehashed':\n1.  **Analyze the findings**: Look at the 'results' list. Note the 'database_name', 'email', and 'password' fields.\n2.  **Summarize**: Explain exactly what was found. For example: \"I found 3 records. The password '123456' was seen in the 'Collection1' breach.\"\n3.  **Be Specific**: Do NOT say \"I found results.\" Say exactly WHICH databases and WHAT credentials were found.\n4.  **No Results**: If 'count' is 0, explicitly state that no matches were found in the DeHashed database."}
+        ]
 
     print("**************************************************")
     print("*               Welcome to DehashChat            *")
@@ -157,6 +179,13 @@ def run_conversation(session_id):
                     function_response = query_dehashed(
                         query=function_args.get("query"),
                     )
+
+                    # Print the raw result for the user to see immediately
+                    try:
+                        parsed_debug = json.loads(function_response)
+                        print(f"\n[DEBUG] DeHashed Raw Response: {json.dumps(parsed_debug, indent=2)}\n")
+                    except:
+                        print(f"\n[DEBUG] DeHashed Raw Response: {function_response}\n")
 
                     # Append the assistant's function call message
                     messages.append(response_message)
