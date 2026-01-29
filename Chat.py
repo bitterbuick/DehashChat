@@ -22,8 +22,10 @@ if not DEHASHED_API_KEY:
     print("Error: Missing DEHASHED_API_KEY environment variable.")
     sys.exit(1)
 if not DEHASHED_EMAIL:
-    print("Error: Missing EMAIL_ADDRESS environment variable.")
-    print("DeHashed requires both email and API key for authentication.")
+    print("\n[ERROR] Missing EMAIL_ADDRESS environment variable.")
+    print("Please update your .env file to include:")
+    print("EMAIL_ADDRESS=your_email@example.com")
+    print("This is required for DeHashed authentication.\n")
     sys.exit(1)
 
 openai.api_key = OPENAI_API_KEY

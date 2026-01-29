@@ -27,11 +27,18 @@ The easiest way to run the application is using Docker Compose.
 
 ### Run
 
-Run the application with a single command:
+### Run
 
-```sh
-docker-compose run --rm dehashchat
-```
+1.  **Configure Environment**:
+    Ensure your `.env` file contains the `EMAIL_ADDRESS` field (required for DeHashed):
+    ```
+    EMAIL_ADDRESS=your_email@example.com
+    ```
+
+2.  **Start the App**:
+    ```sh
+    docker-compose run --rm dehashchat
+    ```
 
 This will build the image (if needed), start the container, and drop you into the interactive prompt.
 
