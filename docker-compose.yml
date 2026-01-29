@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  dehashchat:
+    build: .
+    container_name: dehashchat
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEHASHED_API_KEY=${DEHASHED_API_KEY}
+    volumes:
+      - .:/app
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

@@ -4,16 +4,23 @@ import json
 import os
 import sys
 
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if present
+load_dotenv()
+
 # Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 DEHASHED_API_KEY = os.getenv("DEHASHED_API_KEY")
 SESSION_FILE = 'chat_sessions.json'
 
 if not OPENAI_API_KEY:
-    print("Missing OPENAI_API_KEY environment variable.")
+    print("Error: Missing OPENAI_API_KEY environment variable.")
+    print("Please check your .env file or docker environment variables.")
     sys.exit(1)
 if not DEHASHED_API_KEY:
-    print("Missing DEHASHED_API_KEY environment variable.")
+    print("Error: Missing DEHASHED_API_KEY environment variable.")
+    print("Please check your .env file or docker environment variables.")
     sys.exit(1)
 
 openai.api_key = OPENAI_API_KEY
@@ -37,7 +44,7 @@ def save_session(session_id, messages):
 def chatgpt_query(session_id, question):
     try:
         response = openai.Completion.create(
-            engine="davinci",
+            engine="gpt-3.5-turbo-instruct", # Updated from davinci
             prompt=question,
             temperature=0.7,
             max_tokens=150,
@@ -65,6 +72,15 @@ def query_dehashed(parameters):
         return None
 
 def main():
+    print("**************************************************")
+    print("*               Welcome to DehashChat            *")
+    print("*                                                *")
+    print("* Interact with ChatGPT and pivot to DeHashed    *")
+    print("* API for data enrichment.                       *")
+    print("*                                                *")
+    print("* Type 'exit' to quit the application.           *")
+    print("**************************************************\n")
+
     session_id = 'user123'  # This could be dynamically generated or user-defined
     while True:
         question = input("Ask me anything: ")
