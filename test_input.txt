@@ -1,2 +1,0 @@
-Is the password password123 compromised?
-exit
