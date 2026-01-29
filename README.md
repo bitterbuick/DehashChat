@@ -22,6 +22,7 @@ The easiest way to run the application is using Docker Compose.
     ```
     OPENAI_API_KEY=your_actual_key
     DEHASHED_API_KEY=your_actual_key
+    EMAIL_ADDRESS=your_email_address
     ```
 
 ### Run
